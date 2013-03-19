@@ -21,7 +21,34 @@ object BridgeTraversalProblem extends App {
           (right.combinations(1) map { c => reduce(true, left ++ c, right diff c, acc + c.head) }).min
     }
   }
-  
+
+  def reduceWithPath(isOnLeft: Boolean, left: List[Int], right: List[Int], acc: Int, path: (List[List[Int]], List[List[Int]])): Int = {
+    (isOnLeft, left) match {
+      case (false, one :: two :: List()) if (right.isEmpty) =>
+        Int.MaxValue
+      case (true, one :: two :: List()) =>
+        println("PATH: [" + acc + max(one, two) + "], LEFT: [" + path._1 + "], RIGHT: [" + path._2 + "]")
+        acc + max(one, two)
+      case (cond, _) =>
+        if (cond)
+          (left.combinations(2) map {
+            c =>
+              val newLeft = left diff c
+              val newRight = right ++ c
+              val newPath = (path._1 :+ newLeft, path._2 :+ newRight)
+              reduceWithPath(false, newLeft, newRight, acc + c.max, newPath)
+          }).min
+        else
+          (right.combinations(1) map {
+            c =>
+              val newLeft = left ++ c
+              val newRight = right diff c
+              val newPath = (path._1 :+ newLeft, path._2 :+ newRight)
+              reduceWithPath(true, newLeft, newRight, acc + c.head, newPath)
+          }).min
+    }
+  }
+
   // TODO: optimize
   def exhaustive(isOnLeft: Boolean, left: List[Int], right: List[Int], acc: Int): Int = {
     (isOnLeft, left) match {
@@ -63,8 +90,7 @@ object BridgeTraversalProblem extends App {
   def callAlex(people: List[Int]): Int = {
     if (people.length <= ngroup) {
       people.max
-    }
-    else {
+    } else {
       val sortedPeople = people.sorted
       alex(dropIndex(sortedPeople, 1), List(sortedPeople(1)), sortedPeople.take(2).sum)
     }
@@ -72,6 +98,7 @@ object BridgeTraversalProblem extends App {
 
   @tailrec
   def alex(left: List[Int], right: List[Int], acc: Int): Int = {
+    println("left: " + left + ", right: " + right + ", acc: " + acc)
     if (left.length <= ngroup) { // last go
       left.max + acc
     } else if (left.length % 2 == 0) { // even - take min 2
@@ -96,7 +123,7 @@ object BridgeTraversalProblem extends App {
     val (l1, l2) = xs splitAt n
     l1 ::: List(elem) ::: (l2 drop 1)
   }
-  
+
   def insertIndex[T](xs: List[T], n: Int, elem: T) = {
     val (l1, l2) = xs splitAt n
     l1 ::: List(elem) ::: l2
@@ -106,24 +133,27 @@ object BridgeTraversalProblem extends App {
     val (before, atAndAfter) = list span (x => !pred(x))
     before ::: atAndAfter.drop(1)
   }
-  
+
   //val people = List(1, 2, 5, 10, 20) // solution is 33
   //val people = List(1, 2, 5, 10) // solution is 17
-    val people = (1 until 15000).toList // 56287492
+  //    val people = (1 until 15000).toList // 56287492
   //val people = List(1, 2, 3, 4, 5)
+  val people = List(66, 47, 75, 80, 70) // broken one
 
-//  val nPeople = 6
-//  val people = Stream.continually(nextInt(100)).take(nPeople).toList
+  //  val nPeople = 6
+  //  val people = Stream.continually(nextInt(100)).take(nPeople).toList
 
   //println("For these numbers: [%s]", people)
 
-//  val firstMin = people.min
-//  val secondMin = (people diff List(firstMin)).min
-//  val goners = List(firstMin, secondMin)
-//  println("NABIL:      the solution is: [%d]".format(reduceNabil(people diff List(secondMin), List(secondMin), goners.sum)))
+  //  val firstMin = people.min
+  //  val secondMin = (people diff List(firstMin)).min
+  //  val goners = List(firstMin, secondMin)
+  //  println("NABIL:      the solution is: [%d]".format(reduceNabil(people diff List(secondMin), List(secondMin), goners.sum)))
 
-  //println("EXHAUSTIVE: the solution is: [%d]".format(reduce(true, people, List(), 0)))
+  println("EXHAUSTIVE: the solution is: [%d]".format(reduce(true, people, List(), 0)))
 
   println("ALEX:       the solution is: [%d]".format(callAlex(people)))
+  
+  println("EXHAUSTIVE PATH: the solution is: [%d]".format(reduceWithPath(true, people, List(), 0, (List(), List()))))
 
 }
