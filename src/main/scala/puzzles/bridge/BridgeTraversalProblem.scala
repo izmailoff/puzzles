@@ -27,8 +27,10 @@ object BridgeTraversalProblem extends App {
       case (false, one :: two :: List()) if (right.isEmpty) =>
         Int.MaxValue
       case (true, one :: two :: List()) =>
-        println("PATH: [" + acc + max(one, two) + "], LEFT: [" + path._1 + "], RIGHT: [" + path._2 + "]")
-        acc + max(one, two)
+        val result = acc + max(one, two)
+        val l = path._1.zip(path._2)
+        if (result <= 432) println("PATH: [" + result + "], result:\n" + l.mkString("\n"))
+        result
       case (cond, _) =>
         if (cond)
           (left.combinations(2) map {
@@ -153,7 +155,7 @@ object BridgeTraversalProblem extends App {
   println("EXHAUSTIVE: the solution is: [%d]".format(reduce(true, people, List(), 0)))
 
   println("ALEX:       the solution is: [%d]".format(callAlex(people)))
-  
+
   println("EXHAUSTIVE PATH: the solution is: [%d]".format(reduceWithPath(true, people, List(), 0, (List(), List()))))
 
 }
