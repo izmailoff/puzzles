@@ -100,7 +100,7 @@ object BridgeTraversalProblem extends App {
 
   @tailrec
   def alex(left: List[Int], right: List[Int], acc: Int): Int = {
-    println("left: " + left + ", right: " + right + ", acc: " + acc)
+//    println("left: " + left + ", right: " + right + ", acc: " + acc)
     if (left.length <= ngroup) { // last go
       left.max + acc
     } else if (left.length % 2 == 0) { // even - take min 2
@@ -138,24 +138,27 @@ object BridgeTraversalProblem extends App {
 
   //val people = List(1, 2, 5, 10, 20) // solution is 33
   //val people = List(1, 2, 5, 10) // solution is 17
-  //    val people = (1 until 15000).toList // 56287492
+//      val people = (1 until 15000).toList // 56287492
   //val people = List(1, 2, 3, 4, 5)
-  val people = List(66, 47, 75, 80, 70) // broken one
+//  //val people = List(66, 47, 75, 80, 70) // broken one
+  
+// val people = List(3, 47, 63, 42, 67)//List(42, 88, 52, 47, 15, 93, 48) //fail 2
 
-  //  val nPeople = 6
-  //  val people = Stream.continually(nextInt(100)).take(nPeople).toList
+    val nPeople = 12
+    
+    val people = Stream.continually(nextInt(100)).take(nPeople).toList
 
-  //println("For these numbers: [%s]", people)
+  println("For these numbers: [%s]", people)
 
-  //  val firstMin = people.min
-  //  val secondMin = (people diff List(firstMin)).min
-  //  val goners = List(firstMin, secondMin)
-  //  println("NABIL:      the solution is: [%d]".format(reduceNabil(people diff List(secondMin), List(secondMin), goners.sum)))
+    val firstMin = people.min
+    val secondMin = (people diff List(firstMin)).min
+    val goners = List(firstMin, secondMin)
+    println("NABIL:      the solution is: [%d]".format(reduceNabil(people diff List(secondMin), List(secondMin), goners.sum)))
 
   println("EXHAUSTIVE: the solution is: [%d]".format(reduce(true, people, List(), 0)))
 
   println("ALEX:       the solution is: [%d]".format(callAlex(people)))
 
-  println("EXHAUSTIVE PATH: the solution is: [%d]".format(reduceWithPath(true, people, List(), 0, (List(), List()))))
+// println("EXHAUSTIVE PATH: the solution is: [%d]".format(reduceWithPath(true, people, List(), 0, (List(), List()))))
 
 }
