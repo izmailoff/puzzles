@@ -1,4 +1,4 @@
 puzzles
 =======
 
-solutions to various puzzles
+Solutions to various puzzles in Scala.
